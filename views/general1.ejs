@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Kvalifikācijas darbs
+        </title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        <style>
+            .nav-item {
+              margin-left:15px;
+            }
+            *, body {
+              background-color: #d2dfe5;
+            }
+            .page-content{
+                padding-top:10px;
+            }
+            .navbar ul, .navbar a,.navbar div{
+                background-color: #acc5d0;
+            }
+            .quizSetup {
+                margin:20px;
+                text-align:center;
+            }
+            .quizRun {
+                display:none;
+            }
+                .navbar-collapse {
+            padding-left: 100px;
+            padding-right: 20px;
+            }
+          </style>
+            <nav class="navbar navbar-expand-md navbar-light" style="background-color: #acc5d0;">
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <ul class="nav navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/countries">Countries</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/flags">Flags</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/capitals">Capitals</a></li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                          <a class="nav-link dropdown-toggle active" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Multiple answer
+                          </a>
+                        
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="/flagsMultiple">Flags</a></li>
+                            <li><a class="dropdown-item" href="/capitalsMultiple">Capitals</a></li>
+                            <li><a class="dropdown-item" href="/general1">General #1</a></li>
+                            <li><a class="dropdown-item" href="/general2">General #2</a></li>
+                            <li><a class="dropdown-item" href="/general3">General #3</a></li>
+                          </ul>
+                        </div>
+                      </li>
+                  </ul>
+                  <ul class="nav navbar-nav">
+                    <li class="nav-item"><a id="logIn" class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a id="register" class="nav-link" href="/register">Register</a></li>
+                    <li class="nav-item"><a id="logOut" class="nav-link" style="display:none;" href="/logout">Log out</a></li>
+                  </ul>
+                  </div>
+              </nav>
+
+            <div class="quizSetup" id="quizSetup">
+            <select id="timeSelect">
+                <option value="10:00" selected>10:00</option>
+                <option value="15:00">15:00</option>
+                <option value="20:00">20:00</option>
+                <option value="25:00">25:00</option>
+                <option value="5:00">05:00</option>
+            </select>
+            <button id="capitalsQuizStart">Start</button>
+            </div>
+            <div class="quizRun" id="quizRun">
+                    <p id="questionLabel">Please select your favorite Web language:</p>
+                    <input type="radio" id="question1" name="Answer">
+                    <label for="question1" id="questionLabel1"></label><br>
+                    <input type="radio" id="question2" name="Answer">
+                    <label for="question2" id="questionLabel2"></label><br>
+                    <input type="radio" id="question3" name="Answer">
+                    <label for="question3" id="questionLabel3"></label><br>
+                    <input type="radio" id="question4" name="Answer">
+                    <label for="question4" id="questionLabel4"></label><br>
+
+                    <button id="nextButton">Next</button>
+                <p id="timer">10:00</p>
+            </div>
+            <h3 id="score" style="text-align:center;margin-top:20px"></h3>
+        <script>
+            function userLoginCheck(){
+            var logOut = document.getElementById('logOut');
+            var logIn = document.getElementById('logIn');
+            var register = document.getElementById('register');
+            if('<%=locals.username%>') {
+              logOut.style.display = "inline-block";
+              logIn.style.display = "none";
+              register.style.display = "none";
+            }
+            else{
+              logOut.style.display = "none";
+              logIn.style.display = "inline-block";
+              register.style.display = "inline-block";
+            }
+          }
+          userLoginCheck();      
+           var testData;
+           var currentCountryIndex = 0;
+           var capitalsGuessed = 0;
+            var quizEnded = false;
+            // to fetch the country data
+            async function start(testName){
+                const response = await fetch('http://localhost:3000/tests/'+testName);
+                const data = await response.json();
+                return data;
+            }
+            function startTimer(){
+                var timer = document.getElementById('timer');
+                var timerText = timer.innerHTML;
+                var minutes = Number(timerText.split(":")[0]);
+                var seconds = Number(timerText.split(":")[1]);
+                if(seconds == 0){
+                    seconds = 59;
+                    minutes--;
+                } else {
+                    seconds--;
+                }
+                if(minutes < 0){
+                    quizEnded = true;
+                    return;
+                }
+                var minutesToOutput = (minutes < 10) ? "0"+String(minutes) : String(minutes);
+                var secondsToOutput = (seconds < 10) ? "0"+String(seconds) : String(seconds);
+                document.getElementById('timer').innerHTML = minutesToOutput+":"+secondsToOutput;
+                if(quizEnded != true){
+                    var timeoutObj = setTimeout(startTimer, 1000);
+                }
+            }
+            function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+                }
+            function populateTest(questionsValueStruct){
+                var newQuestionsList = [];
+                for(var i =0; i< questionsValueStruct.length; i++){
+                    var newObj = {};
+                    
+                    newObj["QUESTION"] = questionsValueStruct[i]["QUESTION"];
+                    newObj["ANSWER"] = questionsValueStruct[i]["ANSWER"];
+                    newObj["INCORRECT_ANSW1"] = questionsValueStruct[i]["INCORRECT_ANSW1"];;
+                    newObj["INCORRECT_ANSW2"] = questionsValueStruct[i]["INCORRECT_ANSW2"];;
+                    newObj["INCORRECT_ANSW3"] = questionsValueStruct[i]["INCORRECT_ANSW3"];;
+                    newQuestionsList.push(newObj);
+                }
+                
+                console.log(newQuestionsList);
+                return newQuestionsList;
+
+            }
+            function randomizeCorrectAnswerPlace(){
+                return getRandomInt(1, 5);
+            }
+            function updateForm(obj, index){
+                document.getElementById('questionLabel').innerHTML = obj["QUESTION"];
+                document.getElementById('questionLabel1').innerHTML = obj["INCORRECT_ANSW1"];
+                document.getElementById('questionLabel2').innerHTML = obj["INCORRECT_ANSW2"];
+                document.getElementById('questionLabel3').innerHTML = obj["INCORRECT_ANSW3"];
+                document.getElementById('questionLabel4').innerHTML = obj["ANSWER"];
+                if(index != 4){
+                    document.getElementById('questionLabel'+String(index)).innerHTML = obj["ANSWER"];
+                    document.getElementById('questionLabel4').innerHTML = obj["INCORRECT_ANSW"+String(index)];
+                }
+                return index;
+            }
+            function uncheckCheckboxes(){
+                document.getElementById('question1').checked = false;
+                document.getElementById('question2').checked = false;
+                document.getElementById('question3').checked = false;
+                document.getElementById('question4').checked = false;
+            }
+
+            
+                var valuesMap = {};
+                var quizButton = document.getElementById('capitalsQuizStart');
+                quizButton.onclick = function(){
+                    var timeSelect = document.getElementById('timeSelect').value;
+                    var promiseData = start("GENERAL1");
+                    promiseData.then((value) => {
+                        // here goes everything that is needed for the quiz to work
+                        testData = JSON.parse(value);
+                        console.log();
+                        var correctAnswers = 0;
+                        var currentIndex = 0;
+                        var questionsList = populateTest(testData);
+                        var numberOfCapitals = questionsList.length;
+                        var quizSetup = document.getElementById('quizSetup');
+                        quizSetup.style = "display:none;";
+                        var quizRun = document.getElementById('quizRun');
+                        quizRun.style = "display:block; text-align:center; margin:20px;";
+                        var timer = document.getElementById('timer');
+                        timer.innerHTML = timeSelect;
+                        document.getElementById('score').innerHTML = "0/"+String(numberOfCapitals);
+                        var correctAnswerIndex = updateForm(questionsList[0], randomizeCorrectAnswerPlace());
+                        var answerButton = document.getElementById('nextButton');
+                        answerButton.onclick = function(){
+                            if(quizEnded == false){
+                                currentIndex++;
+                                if(currentIndex == numberOfCapitals){
+                                    //end of quiz
+                                    quizEnded = true;
+                                    if(document.getElementById('question'+String(correctAnswerIndex)).checked == true){
+                                        correctAnswers++;
+                                    }
+                                    uncheckCheckboxes();
+                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfCapitals);
+                                }
+                                else{
+                                    if(document.getElementById('question'+String(correctAnswerIndex)).checked == true){
+                                        correctAnswers++;
+                                    }
+                                    uncheckCheckboxes();
+                                    correctAnswerIndex = updateForm(questionsList[currentIndex], randomizeCorrectAnswerPlace());
+                                    
+                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfCapitals);
+                                }    
+                            }
+                        }
+                        startTimer(timer);
+                    });
+                }
+         </script>
+    </body>
+</html>

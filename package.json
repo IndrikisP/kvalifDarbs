@@ -1,0 +1,23 @@
+{
+  "name": "kval_darbs",
+  "version": "1.0.0",
+  "description": "kvalifikacijas darbs",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.4",
+    "bcrypt": "^5.1.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mysql": "^2.18.1",
+    "svgmap": "^2.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
