@@ -55,7 +55,7 @@ app.get('/', (req, res) =>{
         var testNames = ['COUNTRIES', 'FLAGS', 'CAPITALS', 'GENERAL1', 'GENERAL2', 'GENERAL3'];
         var queries = [];
         for(var i=0; i< testNames.length; i++){
-            queries[i] = "SELECT * from test_attempt ta, users u where u.USERNAME = '"+req.session.userName+"' and u.ID = ta.USER_ID and ta.TEST_NAME = '"+testNames[i]+"' order by TIME_LEFT desc";
+            queries[i] = "SELECT * from test_attempt ta, users u where u.USERNAME = '"+req.session.userName+"' and u.ID = ta.USER_ID and ta.TEST_NAME = '"+testNames[i]+"' order by ta.TIME_LEFT desc";
         }
         var pool = mysql.createPool(dbCredentials);
         var return_data = {};
@@ -91,6 +91,7 @@ app.get('/', (req, res) =>{
                 }
                 returnObj["msg2"] = bestScore+" out of "+maxScoreBest+" flags.";
             }
+            console.log(return_data.capitals.length);
             if(return_data.capitals.length > 0){
                 var bestScore = 0;
                 var maxScoreBest = 0;
@@ -104,7 +105,7 @@ app.get('/', (req, res) =>{
                         maxScoreBest = return_data.capitals[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" capitals.";
+                returnObj["msg3"] = bestScore+" out of "+maxScoreBest+" capitals.";
             }
             if(return_data.general1.length > 0){
                 var bestScore = 0;
@@ -119,7 +120,7 @@ app.get('/', (req, res) =>{
                         maxScoreBest = return_data.general1[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" questions.";
+                returnObj["msg4"] = bestScore+" out of "+maxScoreBest+" questions.";
             }
             if(return_data.general2.length > 0){
                 var bestScore = 0;
@@ -134,7 +135,7 @@ app.get('/', (req, res) =>{
                         maxScoreBest = return_data.general2[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" questions.";
+                returnObj["msg5"] = bestScore+" out of "+maxScoreBest+" questions.";
             }
             if(return_data.general3.length > 0){
                 var bestScore = 0;
@@ -149,7 +150,7 @@ app.get('/', (req, res) =>{
                         maxScoreBest = return_data.general3[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" questions.";
+                returnObj["msg6"] = bestScore+" out of "+maxScoreBest+" questions.";
             }
             return returnObj;
         }

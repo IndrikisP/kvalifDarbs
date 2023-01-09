@@ -70,15 +70,6 @@
               </nav>
 
             <div class="quizSetup" id="quizSetup">
-            <select id="regionSelect">
-            <option value="World" selected>World</option>
-            <option value="Europe">Europe</option>
-            <option value="Asia">Asia</option>
-            <option value="North America">North America</option>
-            <option value="South America">South America</option>
-            <option value="Oceania">Oceania</option>
-            <option value="Africa">Africa</option>
-            </select>
             <select id="timeSelect">
                 <option value="10:00" selected>10:00</option>
                 <option value="15:00">15:00</option>
@@ -120,13 +111,14 @@
             }
           }
           userLoginCheck();      
-           var countryData;
+           var testData;
            var currentCountryIndex = 0;
-           var capitalsGuessed = 0;
+           var correctAnswers = 0;
+           var numberOfQuestions = 0;
             var quizEnded = false;
             // to fetch the country data
-            async function start(region){
-                const response = await fetch('http://localhost:3000/api/'+region);
+            async function start(testName){
+                const response = await fetch('http://localhost:3000/tests/'+testName);
                 const data = await response.json();
                 return data;
             }
@@ -163,9 +155,9 @@
                 } else {
                     seconds--;
                 }
-                if(minutes < 0){
+                if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
-                    var quizData = submitQuizResults(countriesGuessed, numberOfCountries, 0);
+                    var quizData = submitQuizResults(correctAnswers, numberOfQuestions, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
                     quizData.then((value) => {
                             
                     });
@@ -183,56 +175,34 @@
                 max = Math.floor(max);
                 return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
                 }
-            function generateIndexes(min, max, excl){
-                var indexes = [];
-                indexes[0] = getRandomInt(min, max);
-                while(indexes[0] == excl){
-                    indexes[0] = getRandomInt(min, max);
-                }
-                indexes[1] = getRandomInt(min, max);
-                while(indexes[1] == excl || indexes[1] == indexes[0]){
-                    indexes[1] = getRandomInt(min, max);
-                }
-                indexes[2] = getRandomInt(min, max);
-                while(indexes[2] == excl || indexes[2] == indexes[1] || indexes[2] == indexes[0]){
-                    indexes[2] = getRandomInt(min, max);
-                }
-                return indexes;
-            }
-            function populateTest(countryValueStruct){
-                var newCountryList = [];
-                for(var i =0; i< countryValueStruct.length; i++){
+            function populateTest(questionsValueStruct){
+                var newQuestionsList = [];
+                for(var i =0; i< questionsValueStruct.length; i++){
                     var newObj = {};
-                    var indexes = generateIndexes(0, countryValueStruct.length, i);
-                    newObj["NAME"] = countryData[i]["NAME"];
-                    newObj["CAPITAL"] = countryData[i]["CAPITAL"];
-                    newObj["capital2"] = countryData[indexes[0]]["CAPITAL"];
-                    newObj["capital3"] = countryData[indexes[1]]["CAPITAL"];
-                    newObj["capital4"] = countryData[indexes[2]]["CAPITAL"];
-                    newCountryList.push(newObj);
+                    
+                    newObj["QUESTION"] = questionsValueStruct[i]["QUESTION"];
+                    newObj["ANSWER"] = questionsValueStruct[i]["ANSWER"];
+                    newObj["INCORRECT_ANSW1"] = questionsValueStruct[i]["INCORRECT_ANSW1"];;
+                    newObj["INCORRECT_ANSW2"] = questionsValueStruct[i]["INCORRECT_ANSW2"];;
+                    newObj["INCORRECT_ANSW3"] = questionsValueStruct[i]["INCORRECT_ANSW3"];;
+                    newQuestionsList.push(newObj);
                 }
-                for(var i =0; i< newCountryList.length; i++){
-                    var j = Math.floor(Math.random() * (i + 1));
-                                
-                    var temp = newCountryList[i];
-                    newCountryList[i] = newCountryList[j];
-                    newCountryList[j] = temp;
-                }
-                return newCountryList;
+                
+                return newQuestionsList;
 
             }
             function randomizeCorrectAnswerPlace(){
                 return getRandomInt(1, 5);
             }
             function updateForm(obj, index){
-                document.getElementById('questionLabel').innerHTML = "What is the capital of "+obj["NAME"];
-                document.getElementById('questionLabel1').innerHTML = obj["CAPITAL"];
-                document.getElementById('questionLabel2').innerHTML = obj["capital2"];
-                document.getElementById('questionLabel3').innerHTML = obj["capital3"];
-                document.getElementById('questionLabel4').innerHTML = obj["capital4"];
-                if(index != 1){
-                    document.getElementById('questionLabel'+String(index)).innerHTML = obj["CAPITAL"];
-                    document.getElementById('questionLabel1').innerHTML = obj["capital"+String(index)];
+                document.getElementById('questionLabel').innerHTML = obj["QUESTION"];
+                document.getElementById('questionLabel1').innerHTML = obj["INCORRECT_ANSW1"];
+                document.getElementById('questionLabel2').innerHTML = obj["INCORRECT_ANSW2"];
+                document.getElementById('questionLabel3').innerHTML = obj["INCORRECT_ANSW3"];
+                document.getElementById('questionLabel4').innerHTML = obj["ANSWER"];
+                if(index != 4){
+                    document.getElementById('questionLabel'+String(index)).innerHTML = obj["ANSWER"];
+                    document.getElementById('questionLabel4').innerHTML = obj["INCORRECT_ANSW"+String(index)];
                 }
                 return index;
             }
@@ -247,45 +217,44 @@
                 var valuesMap = {};
                 var quizButton = document.getElementById('capitalsQuizStart');
                 quizButton.onclick = function(){
-                    var regionSelect = document.getElementById('regionSelect').value;
                     var timeSelect = document.getElementById('timeSelect').value;
-                    var promiseData = start(regionSelect);
+                    var promiseData = start("GENERAL3");
                     promiseData.then((value) => {
                         // here goes everything that is needed for the quiz to work
-                        countryData = JSON.parse(value);
-                        var correctAnswers = 0;
+                        testData = JSON.parse(value);
+                        correctAnswers = 0;
                         var currentIndex = 0;
-                        var countryList = populateTest(countryData);
-                        var numberOfCapitals = countryList.length;
+                        var questionsList = populateTest(testData);
+                        numberOfQuestions = questionsList.length;
                         var quizSetup = document.getElementById('quizSetup');
                         quizSetup.style = "display:none;";
                         var quizRun = document.getElementById('quizRun');
                         quizRun.style = "display:block; text-align:center; margin:20px;";
                         var timer = document.getElementById('timer');
                         timer.innerHTML = timeSelect;
-                        document.getElementById('score').innerHTML = "0/"+String(numberOfCapitals);
-                        var correctAnswerIndex = updateForm(countryList[0], randomizeCorrectAnswerPlace());
+                        document.getElementById('score').innerHTML = "0/"+String(numberOfQuestions);
+                        var correctAnswerIndex = updateForm(questionsList[0], randomizeCorrectAnswerPlace());
                         var answerButton = document.getElementById('nextButton');
                         answerButton.onclick = function(){
                             if(quizEnded == false){
                                 currentIndex++;
-                                if(currentIndex == numberOfCapitals){
+                                if(currentIndex == numberOfQuestions){
                                     //end of quiz
                                     quizEnded = true;
                                     if(document.getElementById('question'+String(correctAnswerIndex)).checked == true){
                                         correctAnswers++;
                                     }
                                     uncheckCheckboxes();
-                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfCapitals);
+                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfQuestions);
                                 }
                                 else{
                                     if(document.getElementById('question'+String(correctAnswerIndex)).checked == true){
                                         correctAnswers++;
                                     }
                                     uncheckCheckboxes();
-                                    correctAnswerIndex = updateForm(countryList[currentIndex], randomizeCorrectAnswerPlace());
+                                    correctAnswerIndex = updateForm(questionsList[currentIndex], randomizeCorrectAnswerPlace());
                                     
-                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfCapitals);
+                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfQuestions);
                                 }    
                             }
                         }
