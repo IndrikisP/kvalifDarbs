@@ -113,13 +113,36 @@
           userLoginCheck();      
            var testData;
            var currentCountryIndex = 0;
-           var capitalsGuessed = 0;
+           var correctAnswers = 0;
+           var numberOfQuestions = 0;
             var quizEnded = false;
             // to fetch the country data
             async function start(testName){
                 const response = await fetch('http://localhost:3000/tests/'+testName);
                 const data = await response.json();
                 return data;
+            }
+            function getSeconds(time) {
+                // Split the time string into minutes and seconds
+                const parts = time.split(":");
+                const minutes = parseInt(parts[0], 10);
+                const seconds = parseInt(parts[1], 10);
+
+                // Return the total number of seconds
+                return minutes * 60 + seconds;
+            }
+            async function submitQuizResults(score, maxScore, allTime, timeLeft){
+                timeLeft = getSeconds(timeLeft);
+                allTime = getSeconds(allTime);
+                var time = allTime - (allTime - timeLeft);
+                await fetch('http://localhost:3000/testPost', {
+                    method: 'POST',
+                    headers : {
+                        'Accept': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                });
             }
             function startTimer(){
                 var timer = document.getElementById('timer');
@@ -132,8 +155,12 @@
                 } else {
                     seconds--;
                 }
-                if(minutes < 0){
+                if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    var quizData = submitQuizResults(correctAnswers, numberOfQuestions, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
+                    quizData.then((value) => {
+                            
+                    });
                     return;
                 }
                 var minutesToOutput = (minutes < 10) ? "0"+String(minutes) : String(minutes);
@@ -197,30 +224,30 @@
                         // here goes everything that is needed for the quiz to work
                         testData = JSON.parse(value);
                         console.log();
-                        var correctAnswers = 0;
+                        correctAnswers = 0;
                         var currentIndex = 0;
                         var questionsList = populateTest(testData);
-                        var numberOfCapitals = questionsList.length;
+                        numberOfQuestions = questionsList.length;
                         var quizSetup = document.getElementById('quizSetup');
                         quizSetup.style = "display:none;";
                         var quizRun = document.getElementById('quizRun');
                         quizRun.style = "display:block; text-align:center; margin:20px;";
                         var timer = document.getElementById('timer');
                         timer.innerHTML = timeSelect;
-                        document.getElementById('score').innerHTML = "0/"+String(numberOfCapitals);
+                        document.getElementById('score').innerHTML = "0/"+String(numberOfQuestions);
                         var correctAnswerIndex = updateForm(questionsList[0], randomizeCorrectAnswerPlace());
                         var answerButton = document.getElementById('nextButton');
                         answerButton.onclick = function(){
                             if(quizEnded == false){
                                 currentIndex++;
-                                if(currentIndex == numberOfCapitals){
+                                if(currentIndex == numberOfQuestions){
                                     //end of quiz
                                     quizEnded = true;
                                     if(document.getElementById('question'+String(correctAnswerIndex)).checked == true){
                                         correctAnswers++;
                                     }
                                     uncheckCheckboxes();
-                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfCapitals);
+                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfQuestions);
                                 }
                                 else{
                                     if(document.getElementById('question'+String(correctAnswerIndex)).checked == true){
@@ -229,7 +256,7 @@
                                     uncheckCheckboxes();
                                     correctAnswerIndex = updateForm(questionsList[currentIndex], randomizeCorrectAnswerPlace());
                                     
-                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfCapitals);
+                                    document.getElementById('score').innerHTML = String(correctAnswers)+"/"+String(numberOfQuestions);
                                 }    
                             }
                         }

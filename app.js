@@ -28,23 +28,23 @@ app.use(session({
     }
 }));
 
-const redirectLogin = (req, res, next) =>{
-    if(!req.session.userId){
-        res.redirect('login');
-    }
-    else{
-        next();
-    }
-}
+// const redirectLogin = (req, res, next) =>{
+//     if(!req.session.userId){
+//         res.redirect('login');
+//     }
+//     else{
+//         next();
+//     }
+// }
 
-const redirectHome = (req, res, next) =>{
-    if(!req.session.userId){
-        res.redirect('login');
-    }
-    else{
-        next();
-    }
-}
+// const redirectHome = (req, res, next) =>{
+//     if(!req.session.userId){
+//         res.redirect('login');
+//     }
+//     else{
+//         next();
+//     }
+// }
 
 app.set('view engine', 'ejs');
 
@@ -52,7 +52,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) =>{
     if(req.session.userName){
         var mysql = require('mysql');
-        var testNames = ['COUNTRIES', 'FLAGS', 'CAPITALS'];
+        var testNames = ['COUNTRIES', 'FLAGS', 'CAPITALS', 'GENERAL'];
         var queries = [];
         for(var i=0; i< testNames.length; i++){
             queries[i] = "SELECT * from test_attempt ta, users u where u.USERNAME = '"+req.session.userName+"' and u.ID = ta.USER_ID and ta.TEST_NAME = '"+testNames[i]+"'";
@@ -87,6 +87,15 @@ app.get('/', (req, res) =>{
                 }
                 returnObj["msg3"] = bestScore+" capitals correct";
             }
+            if(return_data.general.length > 0){
+                var bestScore = 0;
+                for(var i = 0; i< return_data.capitals.length; i++){
+                    if(return_data.capitals[i].SCORE > bestScore){
+                        bestScore = return_data.capitals[i].SCORE;
+                    }
+                }
+                returnObj["msg3"] = bestScore+" capitals correct";
+            }
             return returnObj;
         }
         async.parallel([
@@ -108,6 +117,13 @@ app.get('/', (req, res) =>{
             pool.query(queries[2], {}, function(err, results) {
                 if (err) return parallel_done(err);
                 return_data.capitals = results;
+                parallel_done();
+            });
+        },
+        function(parallel_done) {
+            pool.query(queries[3], {}, function(err, results) {
+                if (err) return parallel_done(err);
+                return_data.general = results;
                 parallel_done();
             });
         }
@@ -133,8 +149,37 @@ app.get('/countries', (req, res) =>{
     res.render('countries', {username: req.session.userName});
 });
 
-app.post('/countriesPost', (req, res) =>{
-    console.log(req.body.key);
+app.post('/testPost', (req, res) =>{
+    var mysql = require('mysql');
+    var score = req.body.score;
+    var time = req.body.time;
+    var timeLeft = req.body.timeLeft;
+    var testName = req.body.testName;
+    var maxScore = req.body.maxScore;
+    console.log(score+" "+time+" "+testName+" "+maxScore);
+    console.log(String(req.session.userName));
+    if(String(req.session.userName) != "undefined" && String(req.session.userName) != ""){
+        var con = mysql.createConnection(dbCredentials);
+        con.connect(function(err) {
+            if (err) throw err;
+            con.query("SELECT * from users where username = '"+req.session.userName+"'", function(err, result){
+                if(err){
+                    // error
+                }
+                else{
+                    console.log(result[0].ID);
+                    var currentTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                    var sql = "INSERT INTO test_attempt (USER_ID, TEST_NAME, SCORE, MAX_SCORE, TIME, TIME_LEFT, REG_DATE) VALUES ('"+result[0].ID+"', '"+testName+"', '"+score+"', '"+maxScore+"', '"+time+"', '"+timeLeft+"', '"+currentTimestamp+"')";
+                    var queryResults;
+                    con.query(sql, function (error, results, fields) {
+                        if (error) throw error;
+                    
+                    }); 
+                }
+            });
+            
+        });
+    }
 });
 
 app.get('/capitals', (req, res) =>{
@@ -335,6 +380,9 @@ app.get('/tests/:testName', (req, res) =>{
         res.json(JSON.stringify(results));
       });
 });
+
+
+// migration for populating the database with the country data
 
 // app.get('/populateDB', (req, res) =>{
 //     var mysql = require('mysql');
@@ -552,7 +600,6 @@ app.get('/tests/:testName', (req, res) =>{
 
 //       });
 // });
-
 
 const userRouter = require('./routes/users');
 

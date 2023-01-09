@@ -93,6 +93,7 @@
                 <button id="previousButton"><</button>
                 <input type="text" id="countryInput" name="countryInput">
                 <button id="nextButton">></button>
+                <button id="countryQuizFinish">Finish</button>
                 <p id="timer">10:00</p>
             </div>
           <h3 id="score" style="text-align:center;margin-top:20px"></h3>
@@ -114,6 +115,7 @@
           }
           userLoginCheck();      
            var countryData;
+           var numberOfCapitals = 0;
            var currentCountryIndex = 0;
            var capitalsGuessed = 0;
             var quizEnded = false;
@@ -122,6 +124,28 @@
                 const response = await fetch('http://localhost:3000/api/'+region);
                 const data = await response.json();
                 return data;
+            }
+            function getSeconds(time) {
+                // Split the time string into minutes and seconds
+                const parts = time.split(":");
+                const minutes = parseInt(parts[0], 10);
+                const seconds = parseInt(parts[1], 10);
+
+                // Return the total number of seconds
+                return minutes * 60 + seconds;
+            }
+            async function submitQuizResults(score, maxScore, allTime, timeLeft){
+                timeLeft = getSeconds(timeLeft);
+                allTime = getSeconds(allTime);
+                var time = allTime - (allTime - timeLeft);
+                await fetch('http://localhost:3000/testPost', {
+                    method: 'POST',
+                    headers : {
+                        'Accept': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                });
             }
             function checkStringForCountry(inputString, valuesStruct){
                 for(var i =0; i< countryData.length; i++){
@@ -149,8 +173,12 @@
                 } else {
                     seconds--;
                 }
-                if(minutes < 0){
+                if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    var quizData = submitQuizResults(capitalsGuessed, numberOfCapitals, 0);
+                    quizData.then((value) => {
+                            
+                    });
                     return;
                 }
                 var minutesToOutput = (minutes < 10) ? "0"+String(minutes) : String(minutes);
@@ -192,7 +220,7 @@
                         // here goes everything that is needed for the quiz to work
                         countryData = JSON.parse(value);
                         var countryList = populateCountryList(countryData);
-                        var numberOfCapitals = countryList.length;
+                        numberOfCapitals = countryList.length;
                         document.getElementById('score').innerHTML = "0/"+String(numberOfCapitals);
                         var quizSetup = document.getElementById('quizSetup');
                         quizSetup.style = "display:none;";

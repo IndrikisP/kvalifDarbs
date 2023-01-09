@@ -88,12 +88,14 @@
             <option value="20:00">20:00</option>
             <option value="25:00">25:00</option>
             <option value="5:00">05:00</option>
+            <option value="1:00">01:00</option>
         </select>
         <button id="countryQuizStart">Start</button>
         </div>
         <div class="quizRun" id="quizRun">
         <label for="country">Country name</label>
         <input type="text" id="country" name="country">
+        <button id="countryQuizFinish">Finish</button>
         <span id="timer">10:00</span>
         <span id="score" style="float:right;"></span>
         </div>
@@ -122,6 +124,7 @@
             // - Add publishing results/ Set logic for end of quiz time
             var countryData;
             var countriesGuessed = 0;
+            var numberOfCountries = 0;
             var quizEnded = false;
             // to fetch the country data
             async function start(region){
@@ -171,14 +174,26 @@
                     ele.style["pointer-events"] = "none";
                  }
             }
-            async function submitQuizResults(){
-                fetch('http://localhost:3000/countriesPost', {
+            function getSeconds(time) {
+                // Split the time string into minutes and seconds
+                const parts = time.split(":");
+                const minutes = parseInt(parts[0], 10);
+                const seconds = parseInt(parts[1], 10);
+
+                // Return the total number of seconds
+                return minutes * 60 + seconds;
+            }
+            async function submitQuizResults(score, maxScore, allTime, timeLeft){
+                timeLeft = getSeconds(timeLeft);
+                allTime = getSeconds(allTime);
+                var time = allTime - (allTime - timeLeft);
+                await fetch('http://localhost:3000/testPost', {
                     method: 'POST',
                     headers : {
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "key=value"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
                 });
             }
             function checkStringForCountry(inputString, valuesStruct, numberOfCountries){
@@ -197,10 +212,6 @@
                             
                             if(countriesGuessed == numberOfCountries){
                                 quizEnded = true;
-                                var quizData = submitQuizResults();
-                                quizData.then((value) => {
-                                    
-                                });
                             }
                         }
                         return valuesStruct;
@@ -219,8 +230,12 @@
                 } else {
                     seconds--;
                 }
-                if(minutes < 0){
+                if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    var quizData = submitQuizResults(countriesGuessed, numberOfCountries, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
+                    quizData.then((value) => {
+                            
+                    });
                     return;
                 }
                 var minutesToOutput = (minutes < 10) ? "0"+String(minutes) : String(minutes);
@@ -244,13 +259,16 @@
                 promiseData.then((value) => {
                     // here goes everything that is needed for the quiz to work
                     countryData = JSON.parse(value);
-                    var numberOfCountries = countryData.length;
+                    numberOfCountries = countryData.length;
                     document.getElementById('score').innerHTML = "0/"+String(numberOfCountries)
                     var quizSetup = document.getElementById('quizSetup');
                     quizSetup.style = "display:none;";
                     var quizRun = document.getElementById('quizRun');
                     quizRun.style = "display:block; text-align:center;";
-                    
+                    var quizEndButton = document.getElementById('countryQuizFinish');
+                    quizEndButton.onclick = function(){
+                        quizEnded = true;
+                    }
                     var inputText = document.getElementById('country');
                     inputText.addEventListener('keyup', (e) => {
                         if (e.keyCode >= 65 && e.keyCode <= 90 && quizEnded == false) { // if a letter pressed

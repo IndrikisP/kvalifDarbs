@@ -130,6 +130,28 @@
                 const data = await response.json();
                 return data;
             }
+            function getSeconds(time) {
+                // Split the time string into minutes and seconds
+                const parts = time.split(":");
+                const minutes = parseInt(parts[0], 10);
+                const seconds = parseInt(parts[1], 10);
+
+                // Return the total number of seconds
+                return minutes * 60 + seconds;
+            }
+            async function submitQuizResults(score, maxScore, allTime, timeLeft){
+                timeLeft = getSeconds(timeLeft);
+                allTime = getSeconds(allTime);
+                var time = allTime - (allTime - timeLeft);
+                await fetch('http://localhost:3000/testPost', {
+                    method: 'POST',
+                    headers : {
+                        'Accept': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                });
+            }
             function startTimer(){
                 var timer = document.getElementById('timer');
                 var timerText = timer.innerHTML;
@@ -143,6 +165,10 @@
                 }
                 if(minutes < 0){
                     quizEnded = true;
+                    var quizData = submitQuizResults(countriesGuessed, numberOfCountries, 0);
+                    quizData.then((value) => {
+                            
+                    });
                     return;
                 }
                 var minutesToOutput = (minutes < 10) ? "0"+String(minutes) : String(minutes);
