@@ -122,7 +122,7 @@
           userLoginCheck();      
            var countryData;
            var currentCountryIndex = 0;
-           var capitalsGuessed = 0;
+           var correctAnswers = 0;
             var quizEnded = false;
             // to fetch the country data
             async function start(region){
@@ -165,7 +165,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
-                    var quizData = submitQuizResults(capitalsGuessed, countryData.length, document.getElementById('timeSelect').value, document.getElementById('timer').innerHTML);
+                    var quizData = submitQuizResults(correctAnswers, countryData.length, document.getElementById('timeSelect').value, document.getElementById('timer').innerHTML);
                         quizData.then((value) => {
                                     
                         });
@@ -254,7 +254,6 @@
                     promiseData.then((value) => {
                         // here goes everything that is needed for the quiz to work
                         countryData = JSON.parse(value);
-                        var correctAnswers = 0;
                         var currentIndex = 0;
                         var countryList = populateTest(countryData);
                         var numberOfCapitals = countryList.length;

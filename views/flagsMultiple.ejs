@@ -126,7 +126,7 @@
             // - Add publishing results/ Set logic for end of quiz time
            var countryData;
            var currentCountryIndex = 0;
-           var flagsGuessed = 0;
+           var correctAnswers = 0;
             var quizEnded = false;
             // to fetch the country data
             async function start(region){
@@ -153,7 +153,7 @@
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=CAPITALS"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=FLAGS"
                 });
             }
             function startTimer(){
@@ -169,7 +169,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
-                    var quizData = submitQuizResults(flagsGuessed, countryData.length, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
+                    var quizData = submitQuizResults(correctAnswers, countryData.length, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
                     quizData.then((value) => {
                             
                     });
@@ -258,7 +258,6 @@
                     // here goes everything that is needed for the quiz to work
                     countryData = JSON.parse(value);
                     var countryList = populateTest(countryData);
-                    var correctAnswers = 0;
                     var currentIndex = 0;
                     var numberOfFlags = countryList.length;
                     document.getElementById('score').innerHTML = "0/"+String(numberOfFlags);

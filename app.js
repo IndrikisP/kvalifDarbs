@@ -28,24 +28,6 @@ app.use(session({
     }
 }));
 
-// const redirectLogin = (req, res, next) =>{
-//     if(!req.session.userId){
-//         res.redirect('login');
-//     }
-//     else{
-//         next();
-//     }
-// }
-
-// const redirectHome = (req, res, next) =>{
-//     if(!req.session.userId){
-//         res.redirect('login');
-//     }
-//     else{
-//         next();
-//     }
-// }
-
 app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
@@ -60,7 +42,6 @@ app.get('/', (req, res) =>{
         var pool = mysql.createPool(dbCredentials);
         var return_data = {};
         function formatReturnObject(return_data, returnObj){
-            console.log(return_data.countries.length);
             if(return_data.countries.length > 0){
                 var bestScore = 0;
                 var maxScoreBest = 0;
@@ -91,7 +72,6 @@ app.get('/', (req, res) =>{
                 }
                 returnObj["msg2"] = bestScore+" out of "+maxScoreBest+" flags.";
             }
-            console.log(return_data.capitals.length);
             if(return_data.capitals.length > 0){
                 var bestScore = 0;
                 var maxScoreBest = 0;
@@ -226,8 +206,6 @@ app.post('/testPost', (req, res) =>{
     var timeLeft = req.body.timeLeft;
     var testName = req.body.testName;
     var maxScore = req.body.maxScore;
-    console.log(score+" "+time+" "+testName+" "+maxScore);
-    console.log(String(req.session.userName));
     if(String(req.session.userName) != "undefined" && String(req.session.userName) != ""){
         var con = mysql.createConnection(dbCredentials);
         con.connect(function(err) {
@@ -237,7 +215,6 @@ app.post('/testPost', (req, res) =>{
                     // error
                 }
                 else{
-                    console.log(result[0].ID);
                     var currentTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
                     var sql = "INSERT INTO test_attempt (USER_ID, TEST_NAME, SCORE, MAX_SCORE, TIME, TIME_LEFT, REG_DATE) VALUES ('"+result[0].ID+"', '"+testName+"', '"+score+"', '"+maxScore+"', '"+time+"', '"+timeLeft+"', '"+currentTimestamp+"')";
                     var queryResults;
