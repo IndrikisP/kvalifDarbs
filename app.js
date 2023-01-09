@@ -52,49 +52,104 @@ app.use(express.static('public'));
 app.get('/', (req, res) =>{
     if(req.session.userName){
         var mysql = require('mysql');
-        var testNames = ['COUNTRIES', 'FLAGS', 'CAPITALS', 'GENERAL'];
+        var testNames = ['COUNTRIES', 'FLAGS', 'CAPITALS', 'GENERAL1', 'GENERAL2', 'GENERAL3'];
         var queries = [];
         for(var i=0; i< testNames.length; i++){
-            queries[i] = "SELECT * from test_attempt ta, users u where u.USERNAME = '"+req.session.userName+"' and u.ID = ta.USER_ID and ta.TEST_NAME = '"+testNames[i]+"'";
+            queries[i] = "SELECT * from test_attempt ta, users u where u.USERNAME = '"+req.session.userName+"' and u.ID = ta.USER_ID and ta.TEST_NAME = '"+testNames[i]+"' order by TIME_LEFT desc";
         }
         var pool = mysql.createPool(dbCredentials);
         var return_data = {};
         function formatReturnObject(return_data, returnObj){
+            console.log(return_data.countries.length);
             if(return_data.countries.length > 0){
                 var bestScore = 0;
+                var maxScoreBest = 0;
                 for(var i = 0; i< return_data.countries.length; i++){
-                    if(return_data.countries[i].SCORE > bestScore){
+                    if(return_data.countries[i].SCORE == return_data.countries[i].MAX_SCORE){
                         bestScore = return_data.countries[i].SCORE;
+                        maxScoreBest = return_data.countries[i].MAX_SCORE;
+                    }
+                    else if(return_data.countries[i].SCORE > bestScore){
+                        bestScore = return_data.countries[i].SCORE;
+                        maxScoreBest = return_data.countries[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg1"] = bestScore+" countries correct";
+                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" countries.";
             }
             if(return_data.flags.length > 0){
                 var bestScore = 0;
+                var maxScoreBest = 0;
                 for(var i = 0; i< return_data.flags.length; i++){
-                    if(return_data.flags[i].SCORE > bestScore){
+                    if(return_data.flags[i].SCORE == return_data.flags[i].MAX_SCORE){
                         bestScore = return_data.flags[i].SCORE;
+                        maxScoreBest = return_data.flags[i].MAX_SCORE;
+                    }
+                    else if(return_data.flags[i].SCORE > bestScore){
+                        bestScore = return_data.flags[i].SCORE;
+                        maxScoreBest = return_data.flags[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg2"] = bestScore+" flags correct";
+                returnObj["msg2"] = bestScore+" out of "+maxScoreBest+" flags.";
             }
             if(return_data.capitals.length > 0){
                 var bestScore = 0;
+                var maxScoreBest = 0;
                 for(var i = 0; i< return_data.capitals.length; i++){
-                    if(return_data.capitals[i].SCORE > bestScore){
+                    if(return_data.capitals[i].SCORE == return_data.capitals[i].MAX_SCORE){
                         bestScore = return_data.capitals[i].SCORE;
+                        maxScoreBest = return_data.capitals[i].MAX_SCORE;
+                    }
+                    else if(return_data.capitals[i].SCORE > bestScore){
+                        bestScore = return_data.capitals[i].SCORE;
+                        maxScoreBest = return_data.capitals[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg3"] = bestScore+" capitals correct";
+                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" capitals.";
             }
-            if(return_data.general.length > 0){
+            if(return_data.general1.length > 0){
                 var bestScore = 0;
-                for(var i = 0; i< return_data.capitals.length; i++){
-                    if(return_data.capitals[i].SCORE > bestScore){
-                        bestScore = return_data.capitals[i].SCORE;
+                var maxScoreBest = 0;
+                for(var i = 0; i< return_data.general1.length; i++){
+                    if(return_data.general1[i].SCORE == return_data.general1[i].MAX_SCORE){
+                        bestScore = return_data.general1[i].SCORE;
+                        maxScoreBest = return_data.general1[i].MAX_SCORE;
+                    }
+                    else if(return_data.general1[i].SCORE > bestScore){
+                        bestScore = return_data.general1[i].SCORE;
+                        maxScoreBest = return_data.general1[i].MAX_SCORE;
                     }
                 }
-                returnObj["msg3"] = bestScore+" capitals correct";
+                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" questions.";
+            }
+            if(return_data.general2.length > 0){
+                var bestScore = 0;
+                var maxScoreBest = 0;
+                for(var i = 0; i< return_data.general2.length; i++){
+                    if(return_data.general2[i].SCORE == return_data.general2[i].MAX_SCORE){
+                        bestScore = return_data.general2[i].SCORE;
+                        maxScoreBest = return_data.general2[i].MAX_SCORE;
+                    }
+                    else if(return_data.general2[i].SCORE > bestScore){
+                        bestScore = return_data.general2[i].SCORE;
+                        maxScoreBest = return_data.general2[i].MAX_SCORE;
+                    }
+                }
+                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" questions.";
+            }
+            if(return_data.general3.length > 0){
+                var bestScore = 0;
+                var maxScoreBest = 0;
+                for(var i = 0; i< return_data.general3.length; i++){
+                    if(return_data.general3[i].SCORE == return_data.general3[i].MAX_SCORE){
+                        bestScore = return_data.general3[i].SCORE;
+                        maxScoreBest = return_data.general3[i].MAX_SCORE;
+                    }
+                    else if(return_data.general3[i].SCORE > bestScore){
+                        bestScore = return_data.general3[i].SCORE;
+                        maxScoreBest = return_data.general3[i].MAX_SCORE;
+                    }
+                }
+                returnObj["msg1"] = bestScore+" out of "+maxScoreBest+" questions.";
             }
             return returnObj;
         }
@@ -123,7 +178,21 @@ app.get('/', (req, res) =>{
         function(parallel_done) {
             pool.query(queries[3], {}, function(err, results) {
                 if (err) return parallel_done(err);
-                return_data.general = results;
+                return_data.general1 = results;
+                parallel_done();
+            });
+        },
+        function(parallel_done) {
+            pool.query(queries[4], {}, function(err, results) {
+                if (err) return parallel_done(err);
+                return_data.general2 = results;
+                parallel_done();
+            });
+        },
+        function(parallel_done) {
+            pool.query(queries[5], {}, function(err, results) {
+                if (err) return parallel_done(err);
+                return_data.general3 = results;
                 parallel_done();
             });
         }

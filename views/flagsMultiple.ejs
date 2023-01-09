@@ -153,7 +153,7 @@
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=CAPITALS"
                 });
             }
             function startTimer(){
@@ -223,7 +223,6 @@
                     newCountryList[i] = newCountryList[j];
                     newCountryList[j] = temp;
                 }
-                console.log(newCountryList);
                 return newCountryList;
 
             }

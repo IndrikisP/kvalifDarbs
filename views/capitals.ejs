@@ -144,7 +144,7 @@
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=CAPITALS"
                 });
             }
             function checkStringForCountry(inputString, valuesStruct){
@@ -175,7 +175,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
-                    var quizData = submitQuizResults(capitalsGuessed, numberOfCapitals, 0);
+                    var quizData = submitQuizResults(capitalsGuessed, numberOfCapitals, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
                     quizData.then((value) => {
                             
                     });
@@ -228,6 +228,10 @@
                         quizRun.style = "display:block; text-align:center; margin:20px;";
                         var timer = document.getElementById('timer');
                         timer.innerHTML = timeSelect;
+                        var quizEndButton = document.getElementById('countryQuizFinish');
+                        quizEndButton.onclick = function(){
+                            quizEnded = true;
+                        }
                         var previousButton = document.getElementById('previousButton');
                         var nextButton = document.getElementById('nextButton');
                         document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";

@@ -149,7 +149,7 @@
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=CAPITALS"
                 });
             }
             function startTimer(){
@@ -168,7 +168,7 @@
                     var quizData = submitQuizResults(capitalsGuessed, countryData.length, document.getElementById('timeSelect').value, document.getElementById('timer').innerHTML);
                         quizData.then((value) => {
                                     
-                    });
+                        });
                     return;
                 }
                 var minutesToOutput = (minutes < 10) ? "0"+String(minutes) : String(minutes);
@@ -219,7 +219,6 @@
                     newCountryList[i] = newCountryList[j];
                     newCountryList[j] = temp;
                 }
-                console.log(newCountryList);
                 return newCountryList;
 
             }

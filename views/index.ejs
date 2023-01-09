@@ -17,7 +17,7 @@
         .nav-item {
           margin-left:15px;
         }
-        * {
+        *, body {
           background-color: #d2dfe5;
         }
         .page-content{
@@ -25,6 +25,16 @@
         }
         .navbar ul, .navbar a,.navbar div, .navbar li{
             background-color: #acc5d0;
+        }
+        .userDashboard div, .userDashboard h4, .userDashboard p {
+          display: "none;";
+          background-color: #d2dfe5;
+        }
+        .userDashboard h4 {
+          margin:40px;
+        }
+        .userDashboard p {
+          margin-left:60px;
         }
         img{
         width: 40px;
@@ -69,8 +79,22 @@
                 <li class="nav-item"><a id="logOut" class="nav-link" style="display:none;" href="/logout">Log out</a></li>
               </ul>
               </div>
+             
           </nav>
-
+          <div id="userDashboard" class="userDashboard">
+            <h4> - Countries test best score</h4>
+            <p id="bestCountriesRecord"></p>
+            <h4> - Flags test best score</h4>
+            <p id="bestFlagsRecord"></p>
+            <h4> - Capitals test best score</h4>
+            <p id="bestCapitalsRecord"></p>
+            <h4> - General #1 test best score</h4>
+            <p id="general1Record"></p>
+            <h4> - General #2 test best score</h4>
+            <p id="general2Record"></p>
+            <h4> - General #3 test best score</h3>
+            <p id="general3Record"></p>
+          </div>
           </body>
         
         
@@ -90,13 +114,34 @@
               register.style.display = "inline-block";
             }
             if('<%=locals.msg1%>'){
-              console.log('<%=locals.msg1%>');
+              var userDashboard = document.getElementById('userDashboard');
+              userDashboard.style.display = "inline-block";
+              document.getElementById('bestCountriesRecord').innerHTML = '<%=locals.msg1%>';
             }
             if('<%=locals.msg2%>'){
-              console.log('<%=locals.msg2%>');
+              var userDashboard = document.getElementById('userDashboard');
+              userDashboard.style.display = "inline-block";
+              document.getElementById('bestFlagsRecord').innerHTML = '<%=locals.msg2%>';
             }
             if('<%=locals.msg3%>'){
-              console.log('<%=locals.msg3%>');
+              var userDashboard = document.getElementById('userDashboard');
+              userDashboard.style.display = "inline-block";
+              document.getElementById('bestCapitalsRecord').innerHTML = '<%=locals.msg3%>';
+            }
+            if('<%=locals.msg4%>'){
+              var userDashboard = document.getElementById('userDashboard');
+              userDashboard.style.display = "inline-block";
+              document.getElementById('general1Record').innerHTML = '<%=locals.msg4%>';
+            }
+            if('<%=locals.msg5%>'){
+              var userDashboard = document.getElementById('userDashboard');
+              userDashboard.style.display = "inline-block";
+              document.getElementById('general2Record').innerHTML = '<%=locals.msg5%>';
+            }
+            if('<%=locals.msg6%>'){
+              var userDashboard = document.getElementById('userDashboard');
+              userDashboard.style.display = "inline-block";
+              document.getElementById('general3Record').innerHTML = '<%=locals.msg6%>';
             }
           }
           userSetup();

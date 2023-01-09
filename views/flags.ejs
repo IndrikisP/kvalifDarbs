@@ -146,7 +146,7 @@
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=FLAGS"
                 });
             }
             function startTimer(){
@@ -213,6 +213,10 @@
                     quizRun.style = "display:block; text-align:center; margin:20px;";
                     var timer = document.getElementById('timer');
                     timer.innerHTML = timeSelect;
+                    var quizEndButton = document.getElementById('countryQuizFinish');
+                    quizEndButton.onclick = function(){
+                        quizEnded = true;
+                    }
                     var previousButton = document.getElementById('previousButton');
                     var nextButton = document.getElementById('nextButton');
                     document.getElementById('flag').setAttribute("src", "https://flags.fmcdn.net/data/flags/normal/"+String(countryList[currentCountryIndex]["ISO"]).toLowerCase()+".png");

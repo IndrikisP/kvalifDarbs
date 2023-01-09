@@ -141,7 +141,7 @@
                         'Accept': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=COUNTRIES"
+                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=GENERAL1"
                 });
             }
             function startTimer(){
@@ -188,7 +188,6 @@
                     newQuestionsList.push(newObj);
                 }
                 
-                console.log(newQuestionsList);
                 return newQuestionsList;
 
             }
@@ -223,7 +222,6 @@
                     promiseData.then((value) => {
                         // here goes everything that is needed for the quiz to work
                         testData = JSON.parse(value);
-                        console.log();
                         correctAnswers = 0;
                         var currentIndex = 0;
                         var questionsList = populateTest(testData);
