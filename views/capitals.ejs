@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="/viewFunctions.js"></script>
 
     </head>
     <body>
@@ -98,55 +99,13 @@
             </div>
           <h3 id="score" style="text-align:center;margin-top:20px"></h3>
         <script>
-            function userLoginCheck(){
-            var logOut = document.getElementById('logOut');
-            var logIn = document.getElementById('logIn');
-            var register = document.getElementById('register');
-            if('<%=locals.username%>') {
-              logOut.style.display = "inline-block";
-              logIn.style.display = "none";
-              register.style.display = "none";
-            }
-            else{
-              logOut.style.display = "none";
-              logIn.style.display = "inline-block";
-              register.style.display = "inline-block";
-            }
-          }
-          userLoginCheck();      
-           var countryData;
-           var numberOfCapitals = 0;
-           var currentCountryIndex = 0;
-           var capitalsGuessed = 0;
+            userLoginCheck('<%=locals.username%>');      
+            var countryData;
+            var numberOfCapitals = 0;
+            var currentCountryIndex = 0;
+            var capitalsGuessed = 0;
             var quizEnded = false;
-            // to fetch the country data
-            async function start(region){
-                const response = await fetch('http://localhost:3000/api/'+region);
-                const data = await response.json();
-                return data;
-            }
-            function getSeconds(time) {
-                // Split the time string into minutes and seconds
-                const parts = time.split(":");
-                const minutes = parseInt(parts[0], 10);
-                const seconds = parseInt(parts[1], 10);
-
-                // Return the total number of seconds
-                return minutes * 60 + seconds;
-            }
-            async function submitQuizResults(score, maxScore, allTime, timeLeft){
-                timeLeft = getSeconds(timeLeft);
-                allTime = getSeconds(allTime);
-                var time = allTime - (allTime - timeLeft);
-                await fetch('http://localhost:3000/testPost', {
-                    method: 'POST',
-                    headers : {
-                        'Accept': 'application/x-www-form-urlencoded',
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: "score="+String(score)+"&time="+String(allTime)+"&timeLeft="+String(time)+"&maxScore="+String(maxScore)+"&testName=CAPITALS"
-                });
-            }
+            
             function checkStringForCountry(inputString, valuesStruct){
                 for(var i =0; i< countryData.length; i++){
                     if (inputString == countryData[i]["NAME"]){
@@ -175,7 +134,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
-                    var quizData = submitQuizResults(capitalsGuessed, numberOfCapitals, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML);
+                    var quizData = submitQuizResults(capitalsGuessed, numberOfCapitals, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML, "CAPITALS");
                     quizData.then((value) => {
                             
                     });
@@ -210,80 +169,80 @@
             }
 
             
-                var valuesMap = {};
-                var quizButton = document.getElementById('capitalsQuizStart');
-                quizButton.onclick = function(){
-                    var regionSelect = document.getElementById('regionSelect').value;
-                    var timeSelect = document.getElementById('timeSelect').value;
-                    var promiseData = start(regionSelect);
-                    promiseData.then((value) => {
-                        // here goes everything that is needed for the quiz to work
-                        countryData = JSON.parse(value);
-                        var countryList = populateCountryList(countryData);
-                        numberOfCapitals = countryList.length;
-                        document.getElementById('score').innerHTML = "0/"+String(numberOfCapitals);
-                        var quizSetup = document.getElementById('quizSetup');
-                        quizSetup.style = "display:none;";
-                        var quizRun = document.getElementById('quizRun');
-                        quizRun.style = "display:block; text-align:center; margin:20px;";
-                        var timer = document.getElementById('timer');
-                        timer.innerHTML = timeSelect;
-                        var quizEndButton = document.getElementById('countryQuizFinish');
-                        quizEndButton.onclick = function(){
-                            quizEnded = true;
+            var valuesMap = {};
+            var quizButton = document.getElementById('capitalsQuizStart');
+            quizButton.onclick = function(){
+                var regionSelect = document.getElementById('regionSelect').value;
+                var timeSelect = document.getElementById('timeSelect').value;
+                var promiseData = start(regionSelect);
+                promiseData.then((value) => {
+                    // here goes everything that is needed for the quiz to work
+                    countryData = JSON.parse(value);
+                    var countryList = populateCountryList(countryData);
+                    numberOfCapitals = countryList.length;
+                    document.getElementById('score').innerHTML = "0/"+String(numberOfCapitals);
+                    var quizSetup = document.getElementById('quizSetup');
+                    quizSetup.style = "display:none;";
+                    var quizRun = document.getElementById('quizRun');
+                    quizRun.style = "display:block; text-align:center; margin:20px;";
+                    var timer = document.getElementById('timer');
+                    timer.innerHTML = timeSelect;
+                    var quizEndButton = document.getElementById('countryQuizFinish');
+                    quizEndButton.onclick = function(){
+                        quizEnded = true;
+                    }
+                    var previousButton = document.getElementById('previousButton');
+                    var nextButton = document.getElementById('nextButton');
+                    document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
+                    previousButton.addEventListener('click', () => {
+                        if (currentCountryIndex != 0) { // if a letter pressed
+                            currentCountryIndex--;
+                            document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
                         }
-                        var previousButton = document.getElementById('previousButton');
-                        var nextButton = document.getElementById('nextButton');
-                        document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
-                        previousButton.addEventListener('click', () => {
-                            if (currentCountryIndex != 0) { // if a letter pressed
-                                currentCountryIndex--;
-                                document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
-                            }
-                        });
-                        nextButton.addEventListener('click', () => {
-                            if (currentCountryIndex < countryList.length -1) { // if a letter pressed
-                                currentCountryIndex++;
-                                document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
-                                
-                            }
-                        });
-                        var inputText = document.getElementById('countryInput');
-                        inputText.addEventListener('keyup', (e) => {
-                            if (e.keyCode >= 65 && e.keyCode <= 90 && quizEnded == false) { // if a letter pressed
-                                var currentInputText = document.getElementById('countryInput').value;
-                                var extraCapitalCondition = false;
-                                if(String(countryList[currentCountryIndex]["CAPITAL_EXT"]).includes(";")){
-                                    var capitals = String(countryList[currentCountryIndex]["CAPITAL_EXT"]).split(";");
-                                    if(String(currentInputText).toLowerCase() == String(capitals[0]).toLowerCase() || 
-                                        String(currentInputText).toLowerCase() == String(capitals[1]).toLowerCase()){
-                                            extraCapitalCondition = true;
-                                        }
-                                }
-                                else if(String(countryList[currentCountryIndex]["CAPITAL_EXT"]) != ""){
-                                    if(String(countryList[currentCountryIndex]["CAPITAL_EXT"]).toLowerCase() == String(currentInputText).toLowerCase()){
+                    });
+                    nextButton.addEventListener('click', () => {
+                        if (currentCountryIndex < countryList.length -1) { // if a letter pressed
+                            currentCountryIndex++;
+                            document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
+                            
+                        }
+                    });
+                    var inputText = document.getElementById('countryInput');
+                    inputText.addEventListener('keyup', (e) => {
+                        if (e.keyCode >= 65 && e.keyCode <= 90 && quizEnded == false) { // if a letter pressed
+                            var currentInputText = document.getElementById('countryInput').value;
+                            var extraCapitalCondition = false;
+                            if(String(countryList[currentCountryIndex]["CAPITAL_EXT"]).includes(";")){
+                                var capitals = String(countryList[currentCountryIndex]["CAPITAL_EXT"]).split(";");
+                                if(String(currentInputText).toLowerCase() == String(capitals[0]).toLowerCase() || 
+                                    String(currentInputText).toLowerCase() == String(capitals[1]).toLowerCase()){
                                         extraCapitalCondition = true;
                                     }
-                                }
-                                if(String(currentInputText).toLowerCase() == String(countryList[currentCountryIndex]["CAPITAL"]).toLowerCase() || extraCapitalCondition == true){
-                                    countryList.splice(currentCountryIndex, 1);
-                                    capitalsGuessed++;
-                                    if(countryList.length > 0){
-                                        if(currentCountryIndex == countryList.length){
-                                            currentCountryIndex--;
-                                        }
-                                        document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
-                                    }else{
-                                        quizEnded = true;
-                                    }
-                                    document.getElementById('score').innerHTML = String(capitalsGuessed)+"/"+String(numberOfCapitals);
-                                    document.getElementById('countryInput').value = "";
+                            }
+                            else if(String(countryList[currentCountryIndex]["CAPITAL_EXT"]) != ""){
+                                if(String(countryList[currentCountryIndex]["CAPITAL_EXT"]).toLowerCase() == String(currentInputText).toLowerCase()){
+                                    extraCapitalCondition = true;
                                 }
                             }
-                        });
-                        startTimer(timer);
+                            if(String(currentInputText).toLowerCase() == String(countryList[currentCountryIndex]["CAPITAL"]).toLowerCase() || extraCapitalCondition == true){
+                                countryList.splice(currentCountryIndex, 1);
+                                capitalsGuessed++;
+                                if(countryList.length > 0){
+                                    if(currentCountryIndex == countryList.length){
+                                        currentCountryIndex--;
+                                    }
+                                    document.getElementById('capitalLabel').innerHTML = "What is the capital of "+countryList[currentCountryIndex]["NAME"]+"?";
+                                }else{
+                                    quizEnded = true;
+                                }
+                                document.getElementById('score').innerHTML = String(capitalsGuessed)+"/"+String(numberOfCapitals);
+                                document.getElementById('countryInput').value = "";
+                            }
+                        }
                     });
-                }
+                    startTimer(timer);
+                });
+            }
          </script>
     </body>
 </html>
