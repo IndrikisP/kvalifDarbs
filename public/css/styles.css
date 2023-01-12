@@ -1,0 +1,23 @@
+.nav-item {
+    margin-left:15px;
+}
+  *, body {
+    background-color: #d2dfe5;
+}
+.page-content{
+    padding-top:10px;
+}
+.navbar ul, .navbar a,.navbar div{
+    background-color: #acc5d0;
+}
+.quizSetup {
+      margin:20px;
+      text-align:center;
+}
+.quizRun {
+      display:none;
+}
+.navbar-collapse {
+    padding-left: 100px;
+    padding-right: 20px;
+}

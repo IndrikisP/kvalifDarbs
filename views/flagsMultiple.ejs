@@ -11,64 +11,39 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="/viewFunctions.js"></script>
-
+        <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body>
-        <style>
-            .nav-item {
-              margin-left:15px;
-            }
-            *, body {
-              background-color: #d2dfe5;
-            }
-            .page-content{
-                padding-top:10px;
-            }
-            .navbar ul, .navbar a,.navbar div{
-                background-color: #acc5d0;
-            }
-            .quizSetup {
-                margin:20px;
-                text-align:center;
-            }
-            .quizRun {
-                display:none;
-            }
-            .navbar-collapse {
-            padding-left: 100px;
-            padding-right: 20px;
-            }
-          </style>
-            <nav class="navbar navbar-expand-md navbar-light" style="background-color: #acc5d0;">
-              <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                  <ul class="nav navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/countries">Countries</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/flags">Flags</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/capitals">Capitals</a></li>
-                    <li class="nav-item">
-                        <div class="dropdown">
-                          <a class="nav-link active dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            Multiple answer
-                          </a>
-                        
-                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item" href="/flagsMultiple">Flags</a></li>
-                            <li><a class="dropdown-item" href="/capitalsMultiple">Capitals</a></li>
-                            <li><a class="dropdown-item" href="/general1">General #1</a></li>
-                            <li><a class="dropdown-item" href="/general2">General #2</a></li>
-                            <li><a class="dropdown-item" href="/general3">General #3</a></li>
-                          </ul>
-                        </div>
-                      </li>
-                  </ul>
-                  <ul class="nav navbar-nav">
-                    <li class="nav-item"><a id="logIn" class="nav-link" href="/login">Login</a></li>
-                    <li class="nav-item"><a id="register" class="nav-link" href="/register">Register</a></li>
-                    <li class="nav-item"><a id="logOut" class="nav-link" style="display:none;" href="/logout">Log out</a></li>
-                  </ul>
-                  </div>
-              </nav>
+        <nav class="navbar navbar-expand-md navbar-light" style="background-color: #acc5d0;">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="nav navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/countries">Countries</a></li>
+                <li class="nav-item"><a class="nav-link" href="/flags">Flags</a></li>
+                <li class="nav-item"><a class="nav-link" href="/capitals">Capitals</a></li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link active dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Multiple answer
+                        </a>
+                    
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="/flagsMultiple">Flags</a></li>
+                        <li><a class="dropdown-item" href="/capitalsMultiple">Capitals</a></li>
+                        <li><a class="dropdown-item" href="/general1">General #1</a></li>
+                        <li><a class="dropdown-item" href="/general2">General #2</a></li>
+                        <li><a class="dropdown-item" href="/general3">General #3</a></li>
+                        </ul>
+                    </div>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav">
+                <li class="nav-item"><a id="logIn" class="nav-link" href="/login">Login</a></li>
+                <li class="nav-item"><a id="register" class="nav-link" href="/register">Register</a></li>
+                <li class="nav-item"><a id="logOut" class="nav-link" style="display:none;" href="/logout">Log out</a></li>
+                </ul>
+                </div>
+            </nav>
           <div class="quizSetup" id="quizSetup">
             <select id="regionSelect">
             <option value="World" selected>World</option>

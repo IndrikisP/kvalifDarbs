@@ -7,7 +7,7 @@ app.get('/populateDB', (req, res) =>{
 
     con.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
+      console.log("Connected!");
     });
     var sql = "INSERT INTO countries (NAME, ISO, CAPITAL, REGION) VALUES ('Afghanistan', 'AF', 'Kabul', 'Asia'),";
     sql+= "('Albania', 'AL', 'Tirana', 'Europe'),";

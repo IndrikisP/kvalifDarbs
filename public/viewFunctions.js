@@ -4,6 +4,12 @@ async function start(region){
     const data = await response.json();
     return data;
 }
+// 
+async function startTest(testName){
+    const response = await fetch('http://localhost:3000/tests/'+testName);
+    const data = await response.json();
+    return data;
+}
 // Function to split a mm:ss string and get the seconds in return
 function getSeconds(time) {
     // Split the time string into minutes and seconds
