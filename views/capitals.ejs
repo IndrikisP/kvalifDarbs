@@ -55,6 +55,7 @@
         <option value="Oceania">Oceania</option>
         <option value="Africa">Africa</option>
         </select>
+        <br>
         <select id="timeSelect">
             <option value="10:00" selected>10:00</option>
             <option value="15:00">15:00</option>
@@ -62,14 +63,15 @@
             <option value="25:00">25:00</option>
             <option value="5:00">05:00</option>
         </select>
-        <button id="capitalsQuizStart">Start</button>
+        <br>
+        <button class="button" id="capitalsQuizStart">Start</button>
         </div>
         <div class="quizRun" id="quizRun">
             <p id="capitalLabel">What is the capital of Latvia?</p>
-            <button id="previousButton"><</button>
+            <button class="button" id="previousButton"><</button>
             <input type="text" id="countryInput" name="countryInput">
-            <button id="nextButton">></button>
-            <button id="countryQuizFinish">Finish</button>
+            <button class="button" id="nextButton">></button>
+            <button class="button" id="countryQuizFinish">Finish</button>
             <p id="timer">10:00</p>
         </div>
         <h3 id="score" style="text-align:center;margin-top:20px"></h3>
@@ -109,6 +111,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    endQuizStyling('countryInput', true);
                     var quizData = submitQuizResults(capitalsGuessed, numberOfCapitals, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML, "CAPITALS");
                     quizData.then((value) => {
                             

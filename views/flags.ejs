@@ -54,6 +54,7 @@
             <option value="Oceania">Oceania</option>
             <option value="Africa">Africa</option>
             </select>
+            <br>
             <select id="timeSelect">
                 <option value="10:00" selected>10:00</option>
                 <option value="15:00">15:00</option>
@@ -61,17 +62,20 @@
                 <option value="25:00">25:00</option>
                 <option value="5:00">05:00</option>
             </select>
-            <button id="flagsQuizStart" style="text-align:center;">Start</button>
+            <br>
+            <button class="button" id="flagsQuizStart" style="text-align:center;">Start</button>
             </div>
             <div class="quizRun" id="quizRun">
                 <p style="text-align:center;">Country name</p>
-                <button id="previousButton"><</button>
+                <button class="button" id="previousButton"><</button>
                 <input type="text" id="countryInput" name="countryInput">
-                <button id="nextButton">></button>
-                <button id="countryQuizFinish">Finish</button>
+                <button class="button" id="nextButton">></button>
+                <button class="button" id="countryQuizFinish">Finish</button>
                 <p id="timer">02:00</p>
           </div>
-          <img id="flag" alt="Flag" src="https://flags.fmcdn.net/data/flags/normal/lv.png" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
+        <div style="min-width: 650px; min-height:440px;">
+            <img id="flag" alt="Flag" src="/images/flags.png" style="display: block;margin-left: auto;margin-right: auto;width: 50%; max-height: 440px; max-width: 650px;">
+        </div>
           <h3 id="score" style="text-align:center;margin-top:20px"></h3>
         </img>
         <script>
@@ -95,6 +99,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    endQuizStyling('countryInput', true);
                     var quizData = submitQuizResults(flagsGuessed, countryData.length, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML, "FLAGS");
                     quizData.then((value) => {
                             
@@ -143,7 +148,7 @@
                     var quizSetup = document.getElementById('quizSetup');
                     quizSetup.style = "display:none;";
                     var quizRun = document.getElementById('quizRun');
-                    quizRun.style = "display:block; text-align:center; margin:20px;";
+                    quizRun.style = "display:block; text-align:center; margin:28px;";
                     var timer = document.getElementById('timer');
                     timer.innerHTML = timeSelect;
                     var quizEndButton = document.getElementById('countryQuizFinish');

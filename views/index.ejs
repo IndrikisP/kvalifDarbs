@@ -13,40 +13,6 @@
         <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body>
-      <style>
-        .nav-item {
-          margin-left:15px;
-        }
-        *, body {
-          background-color: #d2dfe5;
-        }
-        .page-content{
-            padding-top:10px;
-        }
-        .navbar ul, .navbar a,.navbar div, .navbar li{
-            background-color: #acc5d0;
-        }
-        .userDashboard div, .userDashboard h4, .userDashboard p {
-          display: "none;";
-          background-color: #d2dfe5;
-        }
-        .userDashboard h4 {
-          margin:40px;
-        }
-        .userDashboard p {
-          margin-left:60px;
-        }
-        img{
-        width: 40px;
-        height: 40px;
-        background-color: red;
-    }
-    .navbar-collapse {
-          padding-left: 100px;
-          padding-right: 20px;
-        }
-      </style>
-      
         <nav class="navbar navbar-expand-md navbar-light" style="background-color: #acc5d0;">
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="nav navbar-nav me-auto">
@@ -81,19 +47,25 @@
               </div>
              
           </nav>
-          <div id="userDashboard" class="userDashboard">
-            <h4> - Countries test best score</h4>
-            <p id="bestCountriesRecord"></p>
-            <h4> - Flags test best score</h4>
-            <p id="bestFlagsRecord"></p>
-            <h4> - Capitals test best score</h4>
-            <p id="bestCapitalsRecord"></p>
-            <h4> - General #1 test best score</h4>
-            <p id="general1Record"></p>
-            <h4> - General #2 test best score</h4>
-            <p id="general2Record"></p>
-            <h4> - General #3 test best score</h3>
-            <p id="general3Record"></p>
+          <div class="centered-content">
+            <div id="guestContent" class="guestContent">
+              <h2>User dashboard</h2>
+              <p>Log in and finish a test to view any results</p>
+            </div>
+            <div id="userDashboard" class="userDashboard" style="display:none;">
+              <h4> - Countries test best score</h4>
+              <p id="bestCountriesRecord"></p>
+              <h4> - Flags test best score</h4>
+              <p id="bestFlagsRecord"></p>
+              <h4> - Capitals test best score</h4>
+              <p id="bestCapitalsRecord"></p>
+              <h4> - General #1 test best score</h4>
+              <p id="general1Record"></p>
+              <h4> - General #2 test best score</h4>
+              <p id="general2Record"></p>
+              <h4> - General #3 test best score</h3>
+              <p id="general3Record"></p>
+            </div>
           </div>
           </body>
         
@@ -103,16 +75,22 @@
             var logOut = document.getElementById('logOut');
             var logIn = document.getElementById('logIn');
             var register = document.getElementById('register');
+            var guestContent = document.getElementById('guestContent');
             if('<%=locals.username%>') {
               logOut.style.display = "inline-block";
               logIn.style.display = "none";
               register.style.display = "none";
+              guestContent.style.display = "none";
             }
             else{
               logOut.style.display = "none";
               logIn.style.display = "inline-block";
               register.style.display = "inline-block";
+              guestContent.style.display = "inline-block";
             }
+            if('<%=locals.msg6%>'){
+              console.log("goes in");
+            };
             if('<%=locals.msg1%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";

@@ -14,7 +14,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="/viewFunctions.js"></script>
-        <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body>
         <style>
@@ -31,15 +30,23 @@
                 background-color: #acc5d0;
             }
             .quizSetup {
+                padding-top: 10px;
                 text-align: center;
             }
             .quizRun {
+                padding-top: 10px;
                 text-align: center;
                 display: none;
             }
             .navbar-collapse {
                 padding-left: 100px;
                 padding-right: 20px;
+            }
+            .button:hover {
+                background-color: #cbdce3;
+            }
+            .button {
+                border: 1px solid black;
             }
           </style>
             <nav class="navbar navbar-expand-md navbar-light" style="background-color: #acc5d0;">
@@ -91,12 +98,12 @@
             <option value="5:00">05:00</option>
             <option value="1:00">01:00</option>
         </select>
-        <button id="countryQuizStart">Start</button>
+        <button class="button" id="countryQuizStart">Start</button>
         </div>
         <div class="quizRun" id="quizRun">
         <label for="country">Country name</label>
         <input type="text" id="country" name="country">
-        <button id="countryQuizFinish">Finish</button>
+        <button class="button" id="countryQuizFinish">Finish</button>
         <span id="timer">10:00</span>
         <span id="score" style="float:right;"></span>
         </div>
@@ -188,6 +195,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    endQuizStyling('country',false);
                     var quizData = submitQuizResults(countriesGuessed, numberOfCountries, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML, "COUNTRIES");
                     quizData.then((value) => {
                             

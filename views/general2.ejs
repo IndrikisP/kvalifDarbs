@@ -53,10 +53,15 @@
                 <option value="25:00">25:00</option>
                 <option value="5:00">05:00</option>
             </select>
-            <button id="capitalsQuizStart">Start</button>
+            <br>
+            <button class="button" id="capitalsQuizStart">Start</button>
             </div>
-            <div class="quizRun" id="quizRun">
+            <div class="quizRunGrid" id="quizRun">
+                <div class="gridHeader">
                     <p id="questionLabel">Please select your favorite Web language:</p>
+                </div>
+                <div class="gridEmptySpace1"></div>
+                <div class="radioCheckBox">
                     <input type="radio" id="question1" name="Answer">
                     <label for="question1" id="questionLabel1"></label><br>
                     <input type="radio" id="question2" name="Answer">
@@ -65,9 +70,11 @@
                     <label for="question3" id="questionLabel3"></label><br>
                     <input type="radio" id="question4" name="Answer">
                     <label for="question4" id="questionLabel4"></label><br>
-
-                    <button id="nextButton">Next</button>
-                <p id="timer">10:00</p>
+                </div>
+                <div class="gridFooter">
+                    <button class="button" id="nextButton">Next</button>
+                    <p id="timer">10:00</p>
+                </div>
             </div>
             <h3 id="score" style="text-align:center;margin-top:20px"></h3>
         <script>
@@ -90,6 +97,7 @@
                 }
                 if(minutes < 0 || quizEnded == true){
                     quizEnded = true;
+                    endQuizStylingMultiple();
                     var quizData = submitQuizResults(correctAnswers, numberOfQuestions, document.getElementById("timeSelect").value, document.getElementById("timer").innerHTML, "GENERAL2");
                     quizData.then((value) => {
                             
@@ -135,7 +143,7 @@
                         var quizSetup = document.getElementById('quizSetup');
                         quizSetup.style = "display:none;";
                         var quizRun = document.getElementById('quizRun');
-                        quizRun.style = "display:block; text-align:center; margin:20px;";
+                        quizRun.style = "display:grid; gap:10px; padding:10px;";
                         var timer = document.getElementById('timer');
                         timer.innerHTML = timeSelect;
                         document.getElementById('score').innerHTML = "0/"+String(numberOfQuestions);

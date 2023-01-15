@@ -21,3 +21,43 @@
     padding-left: 100px;
     padding-right: 20px;
 }
+.quizRunGrid {
+    grid-template-areas:
+    'header header'
+    'emptySpace1 main'
+    'footer footer';
+    display: none;
+}
+.gridHeader { 
+    grid-area: header;text-align: center;
+}
+.gridEmptySpace1 {
+    grid-area: emptySpace1;
+}
+.radioCheckBox { 
+    grid-area: main; text-align: start;min-width: 500px; max-width: 500px; padding-left: 200px;
+}
+.gridFooter { 
+    grid-area: footer;text-align: center;  
+}
+select {
+    margin-bottom: 15px;
+}
+.userDashboard div, .userDashboard h4, .userDashboard p {
+    background-color: #d2dfe5;
+}
+.userDashboard h4 {
+    margin:40px;
+  }
+.centered-content {
+    text-align: center;
+}
+.guestContent {
+    margin-top:40px;
+}
+.button:hover {
+    background-color: #cbdce3;
+}
+.button {
+    border: 1px solid black;
+}

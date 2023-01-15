@@ -283,7 +283,7 @@ app.get('/login', (req, res) =>{
 });
 
 app.get('/logout', (req, res) =>{
-    req.session.userName = null;
+    req.session.userName = "";
     res.status(200);
     res.redirect('/');
 });

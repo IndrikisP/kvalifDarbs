@@ -122,3 +122,18 @@ function updateCapitalsForm(obj, index){
     }
     return index;
 }
+function endQuizStyling(inputId, disableButtons){
+    document.getElementById(inputId).disabled = true;
+    document.getElementById('timer').style = "color:red;";
+    if(disableButtons == true){
+        document.getElementById('previousButton').disabled = true;
+        document.getElementById('nextButton').disabled = true;
+    }
+}
+function endQuizStylingMultiple(){
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].disabled = true;
+    }
+    document.getElementById('timer').style = "color:red;";
+}
