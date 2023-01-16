@@ -124,7 +124,8 @@ function updateCapitalsForm(obj, index){
 }
 function endQuizStyling(inputId, disableButtons){
     document.getElementById(inputId).disabled = true;
-    document.getElementById('timer').style = "color:red;";
+    document.getElementById(inputId).value = "";
+    document.getElementById('timer').style = "color:green;";
     if(disableButtons == true){
         document.getElementById('previousButton').disabled = true;
         document.getElementById('nextButton').disabled = true;
@@ -135,5 +136,5 @@ function endQuizStylingMultiple(){
     for (var i = 0; i < inputs.length; i++) {
         inputs[i].disabled = true;
     }
-    document.getElementById('timer').style = "color:red;";
+    document.getElementById('timer').style = "color:green;";
 }

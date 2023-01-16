@@ -61,3 +61,21 @@ select {
 .button {
     border: 1px solid black;
 }
+#countriesResult {
+    display:none;
+}
+#flagsResult {
+    display:none;
+}
+#capitalsResult {
+    display:none;
+}
+#general1Result {
+    display:none;
+}
+#general2Result {
+    display:none;
+}
+#general3Result {
+    display:none;
+}

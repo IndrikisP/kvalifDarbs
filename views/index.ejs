@@ -53,18 +53,30 @@
               <p>Log in and finish a test to view any results</p>
             </div>
             <div id="userDashboard" class="userDashboard" style="display:none;">
-              <h4> - Countries test best score</h4>
-              <p id="bestCountriesRecord"></p>
-              <h4> - Flags test best score</h4>
-              <p id="bestFlagsRecord"></p>
-              <h4> - Capitals test best score</h4>
-              <p id="bestCapitalsRecord"></p>
-              <h4> - General #1 test best score</h4>
-              <p id="general1Record"></p>
-              <h4> - General #2 test best score</h4>
-              <p id="general2Record"></p>
-              <h4> - General #3 test best score</h3>
-              <p id="general3Record"></p>
+              <div id="countriesResult">
+                <h4> - Countries test best score</h4>
+                <p id="bestCountriesRecord"></p>
+              </div>
+              <div id="flagsResult">
+                <h4> - Flags test best score</h4>
+                <p id="bestFlagsRecord"></p>
+              </div>
+              <div id="capitalsResult">
+                <h4> - Capitals test best score</h4>
+                <p id="bestCapitalsRecord"></p>
+              </div>
+              <div id="general1Result">
+                <h4> - General #1 test best score</h4>
+                <p id="general1Record"></p>
+              </div>
+              <div id="general2Result">
+                <h4> - General #2 test best score</h4>
+                <p id="general2Record"></p>
+              </div>
+              <div id="general3Result">
+                <h4> - General #3 test best score</h3>
+                <p id="general3Record"></p>
+              </div>
             </div>
           </div>
           </body>
@@ -80,7 +92,12 @@
               logOut.style.display = "inline-block";
               logIn.style.display = "none";
               register.style.display = "none";
-              guestContent.style.display = "none";
+              if('<%=locals.msg1%>' || '<%=locals.msg2%>' || '<%=locals.msg3%>' || '<%=locals.msg4%>' || '<%=locals.msg5%>' || '<%=locals.msg6%>'){
+                guestContent.style.display = "none";
+              }
+              else{
+                guestContent.style.display = "inline-block";
+              }
             }
             else{
               logOut.style.display = "none";
@@ -88,37 +105,46 @@
               register.style.display = "inline-block";
               guestContent.style.display = "inline-block";
             }
-            if('<%=locals.msg6%>'){
-              console.log("goes in");
-            };
             if('<%=locals.msg1%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";
+              var result = document.getElementById('countriesResult');
+              result.style.display = "block";
               document.getElementById('bestCountriesRecord').innerHTML = '<%=locals.msg1%>';
             }
             if('<%=locals.msg2%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";
+              var result = document.getElementById('flagsResult');
+              result.style.display = "block";
               document.getElementById('bestFlagsRecord').innerHTML = '<%=locals.msg2%>';
             }
             if('<%=locals.msg3%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";
+              var result = document.getElementById('capitalsResult');
+              result.style.display = "block";
               document.getElementById('bestCapitalsRecord').innerHTML = '<%=locals.msg3%>';
             }
             if('<%=locals.msg4%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";
+              var result = document.getElementById('general1Result');
+              result.style.display = "block";
               document.getElementById('general1Record').innerHTML = '<%=locals.msg4%>';
             }
             if('<%=locals.msg5%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";
+              var result = document.getElementById('general2Result');
+              result.style.display = "block";
               document.getElementById('general2Record').innerHTML = '<%=locals.msg5%>';
             }
             if('<%=locals.msg6%>'){
               var userDashboard = document.getElementById('userDashboard');
               userDashboard.style.display = "inline-block";
+              var result = document.getElementById('general3Result');
+              result.style.display = "block";
               document.getElementById('general3Record').innerHTML = '<%=locals.msg6%>';
             }
           }

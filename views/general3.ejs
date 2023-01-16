@@ -76,7 +76,7 @@
                     <p id="timer">10:00</p>
                 </div>
             </div>
-            <h3 id="score" style="display:grid; gap:10px; padding:10px;"></h3>
+            <h3 id="score" style="text-align:center;margin-top:20px"></h3>
         <script>
           userLoginCheck('<%=locals.username%>');      
            var testData;
@@ -142,7 +142,7 @@
                         var quizSetup = document.getElementById('quizSetup');
                         quizSetup.style = "display:none;";
                         var quizRun = document.getElementById('quizRun');
-                        quizRun.style = "display:block; text-align:center; margin:20px;";
+                        quizRun.style = "display:grid; gap:10px; padding:10px;";
                         var timer = document.getElementById('timer');
                         timer.innerHTML = timeSelect;
                         document.getElementById('score').innerHTML = "0/"+String(numberOfQuestions);
